@@ -1,7 +1,10 @@
+import axios from 'axios';
 import Head from 'next/head'
+import GamePage from '../components/gamepage';
 import styles from '../styles/Home.module.css';
+import landingPageStyles from '../styles/LandingPage.module.css';
 
-export default function Home() {
+export default function Home({data}) {
   return (
     <div className={styles.container}>
       <Head>
@@ -10,12 +13,37 @@ export default function Home() {
       </Head>
 
       <main>
-        <h1 className={styles.title}>
+        <h1 className={landingPageStyles.title}>
           Welcome to <a href="https://nextjs.org">Paul's Page!</a>
         </h1>
+        <div
+          className={landingPageStyles.landingPageBody}
+        >
+          <div
+            className={landingPageStyles.leftPanel}
+          >
+            <h2>Let's get started!</h2>
+            <p>
+              This is the landing page for Paul's site!
+            </p>
+            </div>
+          <div
+            className={landingPageStyles.centerPanel}
+          >
+            {
+              data.map((item,index) => {
+                return(
+                  <GamePage
+                    key={index}
+                    props={item}
+                    index={index}
+                  />
+                );
+              })
+            }
+          </div>
+        </div>
       </main>
-      <div>
-      </div>
 
       <footer
         // className={styles.footer}
@@ -29,20 +57,21 @@ export default function Home() {
           <img src="/vercel.svg" alt="Vercel" className={styles.logo} />
         </a>
       </footer>
-
-      <style jsx global>{`
-        html,
-        body {
-          padding: 0;
-          margin: 0;
-          font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-            Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
-            sans-serif;
-        }
-        * {
-          box-sizing: border-box;
-        }
-      `}</style>
     </div>
   )
+}
+
+export async function getServerSideProps() {
+  // Fetch data from external API
+  const res = await axios.get('https://test.refmint.xyz/api/game_projects/projects',{
+    params: {
+      page_size: 10,
+      page: 1,
+      status: 'ACTIVE'
+    }
+  })
+  let data = res.data
+
+  // Pass data to the page via props
+  return { props: { data } }
 }

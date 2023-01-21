@@ -1,0 +1,43 @@
+.landingPageBody {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+}
+
+.title a:hover,
+.title a:focus,
+.title a:active {
+  text-decoration: underline;
+}
+
+.title a {
+  color: #0070f3;
+  text-decoration: none;
+}
+
+.title {
+  line-height: 1.15;
+  font-size: 3.6rem;
+  padding: 10px;
+  border-bottom-style: solid;
+}
+
+.leftPanel {
+  border-right-color: black;
+  border-right-style: solid;
+  width:300px;
+  padding: 10px;
+}
+
+.centerPanel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
+@media (max-width: 800px) {
+  .leftPanel {
+    display: none;
+  }
+}
