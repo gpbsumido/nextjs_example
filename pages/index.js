@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import Link from 'next/link'
 import styles from '../styles/Home.module.css';
 import landingPageStyles from '../styles/LandingPage.module.css';
 import KarenLake from '../assets/DSC_4264.jpeg';
@@ -38,9 +39,19 @@ export default function Home() {
           <div
             className={landingPageStyles.leftPanel}
           >
-            <p>
+            <p
+              className={landingPageStyles.fill}
+            >
               This is the landing page will include some of the photos that Paul takes on his Nikon Z5 camera.
             </p>
+            <p>
+              Links
+            </p>
+            <ul>
+              <li>
+                <Link href="/second">List of restaurants and games</Link>
+              </li>
+            </ul>
           </div>
           <div
             className={landingPageStyles.centerPanel}

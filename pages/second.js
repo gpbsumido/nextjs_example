@@ -2,8 +2,10 @@ import axios from 'axios';
 import GamePage from '../components/gamepage';import Head from 'next/head'
 import styles from '../styles/Home.module.css';
 import landingPageStyles from '../styles/LandingPage.module.css';
+import clientPromise from '../utils/mongo';
 
-export default function SecondPage({data}){
+export default function SecondPage({data, movies}){
+
   return (
     <div className={styles.container}>
       <Head>
@@ -29,6 +31,8 @@ export default function SecondPage({data}){
           <div
             className={landingPageStyles.centerPanel}
           >
+            <p>Games</p>
+            <br />
             {
               data.map((item,index) => {
                 return(
@@ -40,6 +44,26 @@ export default function SecondPage({data}){
                 );
               })
             }
+            <br />
+            <p>
+              Restaurants
+            </p>
+            <br />
+            <ul
+              className={landingPageStyles.bullets}
+            >
+              {
+                movies.map(item => {
+                  return(
+                    <li
+                      key={item._id}
+                    >
+                      { item.name }
+                    </li>
+                  );
+                })
+              }
+            </ul>
           </div>
         </div>
       </main>
@@ -69,8 +93,30 @@ export async function getServerSideProps() {
       status: 'ACTIVE'
     }
   })
-  let data = res.data
+  let data = res.data;
+
+  let movies = {};
+
+  try {
+    const client = await clientPromise;
+    const db = client.db("sample_restaurants");
+
+    const resp = await db
+        .collection("restaurants")
+        .find({})
+        .sort({ metacritic: -1 })
+        .limit(20)
+        .toArray();
+
+    movies = JSON.parse(JSON.stringify(resp));
+
+    // console.log( {
+    //     props: { movies: JSON.parse(JSON.stringify(movies)) },
+    // })
+  } catch (e) {
+      console.error(e);
+  }
 
   // Pass data to the page via props
-  return { props: { data } }
+  return { props: { data, movies } }
 }
