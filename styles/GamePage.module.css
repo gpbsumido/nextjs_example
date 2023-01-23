@@ -6,3 +6,15 @@
   margin: 10px 10px;
   padding: 10px;
 }
+
+.photoPostContainer {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 40px;
+}
+
+.photoPostText {
+  text-align: center;
+  margin: 10px 0px;
+  font-style: italic;
+}
