@@ -2,7 +2,7 @@ import Head from 'next/head'
 import styles from '../styles/Home.module.css';
 import landingPageStyles from '../styles/LandingPage.module.css';
 import KarenLake from '../assets/DSC_4264.jpeg';
-import LionDance from '../assets/DSC_5261.JPG';
+import LionDance from '../assets/DSC_5261.jpeg';
 import PhotoPost from '../components/photoPost';
 
 export default function Home() {
