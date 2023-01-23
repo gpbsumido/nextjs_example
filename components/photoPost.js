@@ -8,6 +8,7 @@ export default function PhotoPost({image,text}){
     >
       <Image
         src={image}
+        alt={text.slice(0,9)}
       />
       <p
         className={GamePageStyles.photoPostText}

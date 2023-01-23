@@ -44,9 +44,10 @@ export default function Home() {
             className={landingPageStyles.centerPanel}
           >
             {
-              posts.map( item => {
+              posts.map( (item,index) => {
                 return (
                   <PhotoPost
+                    key={index}
                     image={item.image}
                     text={item.text}
                   />
