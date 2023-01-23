@@ -1,10 +1,10 @@
-import axios from 'axios';
 import Head from 'next/head'
-import GamePage from '../components/gamepage';
 import styles from '../styles/Home.module.css';
 import landingPageStyles from '../styles/LandingPage.module.css';
+import KarenLake from '../assets/DSC_4264.jpeg'
+import Image from 'next/image'
 
-export default function Home({data}) {
+export default function Home() {
   return (
     <div className={styles.container}>
       <Head>
@@ -14,7 +14,7 @@ export default function Home({data}) {
 
       <main>
         <h1 className={landingPageStyles.title}>
-          Welcome to <a href="https://nextjs.org">Paul's Page!</a>
+          Welcome to Paul's photography page!
         </h1>
         <div
           className={landingPageStyles.landingPageBody}
@@ -22,25 +22,16 @@ export default function Home({data}) {
           <div
             className={landingPageStyles.leftPanel}
           >
-            <h2>Let's get started!</h2>
             <p>
-              This is the landing page for Paul's site!
+              This is the landing page will include some of the photos that Paul takes on his Nikon Z5 camera.
             </p>
             </div>
           <div
             className={landingPageStyles.centerPanel}
           >
-            {
-              data.map((item,index) => {
-                return(
-                  <GamePage
-                    key={index}
-                    props={item}
-                    index={index}
-                  />
-                );
-              })
-            }
+            <Image
+              src={KarenLake}
+            />
           </div>
         </div>
       </main>
@@ -59,19 +50,4 @@ export default function Home({data}) {
       </footer>
     </div>
   )
-}
-
-export async function getServerSideProps() {
-  // Fetch data from external API
-  const res = await axios.get('https://test.refmint.xyz/api/game_projects/projects',{
-    params: {
-      page_size: 10,
-      page: 1,
-      status: 'ACTIVE'
-    }
-  })
-  let data = res.data
-
-  // Pass data to the page via props
-  return { props: { data } }
 }
