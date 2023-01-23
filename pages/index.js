@@ -10,12 +10,14 @@ export default function Home() {
 
   const posts = [
     {
-      image: KarenLake,
-      text: `Little hike up North Van. T'was cold. Saw some people fishing.`
+      image: LionDance,
+      text: `Went to the Port Moody Farmer's Market on Chinese Lunar New Year. Saw a Lion Dancing.`,
+      date: '2023-01-22'
     },
     {
-      image: LionDance,
-      text: `Went to the Port Moody Farmer's Market on Chinese Lunar New Year. Saw a Lion Dancing.`
+      image: KarenLake,
+      text: `Little hike up North Van. T'was cold. Saw some people fishing.`,
+      date: '2022-05-18'
     }
   ];
 
@@ -50,6 +52,7 @@ export default function Home() {
                     key={index}
                     image={item.image}
                     text={item.text}
+                    date={item.date}
                   />
                 );
               })

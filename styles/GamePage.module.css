@@ -18,3 +18,19 @@
   margin: 10px 0px;
   font-style: italic;
 }
+
+.dateStyle {
+  margin-top: 5px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.photoPostPhoto {
+  height: 100%;
+  display: block;
+  object-fit: contain;
+}
+
+.photoDiv {
+  max-height: 50vh;
+}
