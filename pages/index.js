@@ -1,10 +1,26 @@
 import Head from 'next/head'
 import styles from '../styles/Home.module.css';
 import landingPageStyles from '../styles/LandingPage.module.css';
-import KarenLake from '../assets/DSC_4264.jpeg'
-import Image from 'next/image'
+import KarenLake from '../assets/DSC_4264.jpeg';
+import LionDance from '../assets/DSC_5261.jpeg';
+import PhotoPost from '../components/photoPost';
 
 export default function Home() {
+
+
+  const posts = [
+    {
+      image: LionDance,
+      text: `Went to the Port Moody Farmer's Market on Chinese Lunar New Year. Saw a Lion Dancing.`,
+      date: '2023-01-22'
+    },
+    {
+      image: KarenLake,
+      text: `Little hike up North Van. T'was cold. Saw some people fishing.`,
+      date: '2022-05-18'
+    }
+  ];
+
   return (
     <div className={styles.container}>
       <Head>
@@ -25,13 +41,22 @@ export default function Home() {
             <p>
               This is the landing page will include some of the photos that Paul takes on his Nikon Z5 camera.
             </p>
-            </div>
+          </div>
           <div
             className={landingPageStyles.centerPanel}
           >
-            <Image
-              src={KarenLake}
-            />
+            {
+              posts.map( (item,index) => {
+                return (
+                  <PhotoPost
+                    key={index}
+                    image={item.image}
+                    text={item.text}
+                    date={item.date}
+                  />
+                );
+              })
+            }
           </div>
         </div>
       </main>
