@@ -3,7 +3,7 @@ import GamePage from '../components/gamepage';import Head from 'next/head'
 import styles from '../styles/Home.module.css';
 import landingPageStyles from '../styles/LandingPage.module.css';
 
-export default function SecondPage(){
+export default function SecondPage({data}){
   return (
     <div className={styles.container}>
       <Head>
