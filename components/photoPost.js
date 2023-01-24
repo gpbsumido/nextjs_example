@@ -1,7 +1,7 @@
 import GamePageStyles from '../styles/GamePage.module.css';
-import Image from 'next/image'
+import landingPageStyles from '../styles/LandingPage.module.css';
 
-export default function PhotoPost({image,text,date}){
+export default function PhotoPost({image,text,date,removeImage}){
   return (
     <div
       className={GamePageStyles.photoPostContainer}
@@ -25,6 +25,12 @@ export default function PhotoPost({image,text,date}){
       >
         { text }
       </p>
+      <button
+        className={landingPageStyles.loadMore}
+        onClick={async ()=> removeImage(text)}
+      >
+        Delete: "{ text.length > 15 ? (text.slice(0,15) + '...') : text }"
+      </button>
     </div>
   );
 }

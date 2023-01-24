@@ -21,6 +21,24 @@ export default function Home({ urlsWithKeys, continuationKey, finishedLoading })
   const [fiinishedList,setFinishedList] = useState(finishedLoading);
   const [searchTerm,setSearchTerm] = useState('');
 
+  async function removeImage(key){
+    const bucketParams = {
+      Bucket: process.env.NEXT_PUBLIC_BUCKET_NAME,
+      Key: key,
+    };
+    try {
+      await s3.deleteObject(bucketParams).promise()
+      console.log("Success. Object deleted.");
+      setImageURLs(prevState =>{
+        if (!prevState) return [];
+        const newState =  prevState.filter(item => item.key !== key);
+        return newState;
+      })
+    } catch (err) {
+      console.log("Error", err);
+    }
+  }
+
   return (
     <div className={styles.container}>
       <Head>
@@ -136,6 +154,7 @@ export default function Home({ urlsWithKeys, continuationKey, finishedLoading })
                     image={item.url}
                     text={item.key}
                     date={undefined}
+                    removeImage={removeImage}
                   />
                 );
               })
@@ -148,8 +167,8 @@ export default function Home({ urlsWithKeys, continuationKey, finishedLoading })
                   const s3params = {
                     Bucket: process.env.NEXT_PUBLIC_BUCKET_NAME,
                     MaxKeys: 3,
-                    ContinuationToken: contKey 
                   };
+                  if (contKey) s3params.ContinuationToken = contKey;
                   if (searchTerm !== '') {
                     s3params.Prefix = searchTerm;
                   }
@@ -239,7 +258,8 @@ export async function getServerSideProps() {
       key: images.items[index]
     }
   })
-  const continuationKey = images.continuationKey;
+  let continuationKey = null;
+  if (images.continuationKey) continuationKey = images.continuationKey;
   let finishedLoading = images.continuationKey === undefined;
   // Pass data to the page via props
   return { props: { urlsWithKeys, continuationKey, finishedLoading } }
