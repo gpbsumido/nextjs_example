@@ -6,6 +6,8 @@
     "start": "next start"
   },
   "dependencies": {
+    "aws": "^0.0.3-2",
+    "aws-sdk": "^2.1300.0",
     "axios": "^1.2.3",
     "formidable": "^2.1.1",
     "mongodb": "^4.13.0",

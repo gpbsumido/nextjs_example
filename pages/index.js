@@ -5,8 +5,9 @@ import landingPageStyles from '../styles/LandingPage.module.css';
 import KarenLake from '../assets/DSC_4264.jpeg';
 import LionDance from '../assets/DSC_5261.jpeg';
 import PhotoPost from '../components/photoPost';
+import S3 from 'aws-sdk/clients/s3'
 
-export default function Home() {
+export default function Home({ urls }) {
 
 
   const posts = [
@@ -57,14 +58,15 @@ export default function Home() {
             className={landingPageStyles.centerPanel}
           >
             {
-              posts.map( (item,index) => {
+              urls.map((url,index) =>{
                 return (
                   <PhotoPost
                     key={index}
-                    image={item.image}
-                    text={item.text}
-                    date={item.date}
+                    image={url}
+                    text={url}
+                    date={undefined}
                   />
+                  // <img src={url}/>
                 );
               })
             }
@@ -86,4 +88,42 @@ export default function Home() {
       </footer>
     </div>
   )
+}
+
+async function getBucketList(s3){
+
+  var params = {
+    Bucket: process.env.BUCKET_NAME
+  };
+  const list = await s3.listObjectsV2(params).promise();
+  return list.Contents.map(item =>{
+    // console.log(item.Key)
+    return item.Key;
+  })
+}
+
+export async function getServerSideProps() {
+
+
+  const s3 = new S3({
+    region: 'ca-central-1',
+    accessKeyId: process.env.ACCESS_KEY,
+    secretAccessKey: process.env.SECRET_KEY,
+    signatureVersion: "v4"
+  })
+
+  let images = await getBucketList(s3);
+
+  const keys = images.map(async image => {
+    const param = {
+      Bucket: process.env.BUCKET_NAME,
+      Key: image,
+      Expires: 600,
+    };
+    return await s3.getSignedUrlPromise("getObject",param);
+  });
+  const urls = await Promise.all(keys);
+
+  // Pass data to the page via props
+  return { props: { urls } }
 }

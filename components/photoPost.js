@@ -9,7 +9,7 @@ export default function PhotoPost({image,text,date}){
       <div
         className={GamePageStyles.photoDiv}
       >
-        <Image
+        <img
           className={GamePageStyles.photoPostPhoto}
           src={image}
           alt={text.slice(0,9)}
