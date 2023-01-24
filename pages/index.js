@@ -2,26 +2,15 @@ import Head from 'next/head'
 import Link from 'next/link'
 import styles from '../styles/Home.module.css';
 import landingPageStyles from '../styles/LandingPage.module.css';
-import KarenLake from '../assets/DSC_4264.jpeg';
-import LionDance from '../assets/DSC_5261.jpeg';
 import PhotoPost from '../components/photoPost';
 import S3 from 'aws-sdk/clients/s3'
+import { useState } from 'react'
 
-export default function Home({ urls }) {
+export default function Home({ urlsWithKeys, continuationKey, finishedLoading }) {
 
-
-  const posts = [
-    {
-      image: LionDance,
-      text: `Went to the Port Moody Farmer's Market on Chinese Lunar New Year. Saw a Lion Dancing.`,
-      date: '2023-01-22'
-    },
-    {
-      image: KarenLake,
-      text: `Little hike up North Van. T'was cold. Saw some people fishing.`,
-      date: '2022-05-18'
-    }
-  ];
+  const [imageURLs,setImageURLs] = useState(urlsWithKeys);
+  const [contKey,setContKey] = useState(continuationKey);
+  const [fiinishedList,setFinishedList] = useState(finishedLoading);
 
   return (
     <div className={styles.container}>
@@ -40,11 +29,6 @@ export default function Home({ urls }) {
           <div
             className={landingPageStyles.leftPanel}
           >
-            <p
-              className={landingPageStyles.fill}
-            >
-              This is the landing page will include some of the photos that Paul takes on his Nikon Z5 camera.
-            </p>
             <p>
               Links
             </p>
@@ -52,23 +36,71 @@ export default function Home({ urls }) {
               <li>
                 <Link href="/second">List of restaurants and games</Link>
               </li>
+              <li>
+                <Link href="/submissionAws">Add new Image</Link>
+              </li>
             </ul>
           </div>
           <div
             className={landingPageStyles.centerPanel}
           >
             {
-              urls.map((url,index) =>{
+              imageURLs.map((item,index) =>{
                 return (
                   <PhotoPost
                     key={index}
-                    image={url}
-                    text={url}
+                    image={item.url}
+                    text={item.key}
                     date={undefined}
                   />
-                  // <img src={url}/>
                 );
               })
+            }
+            {
+              !fiinishedList &&
+              <button
+                onClick={async ()=>{
+                  const s3 = new S3({
+                    region: 'ca-central-1',
+                    accessKeyId: process.env.NEXT_PUBLIC_ACCESS_KEY,
+                    secretAccessKey: process.env.NEXT_PUBLIC_SECRET_KEY,
+                    signatureVersion: "v4"
+                  })
+                  const s3params = {
+                    Bucket: process.env.NEXT_PUBLIC_BUCKET_NAME,
+                    MaxKeys: 3,
+                    ContinuationToken: contKey 
+                  };
+                  const response = await s3.listObjectsV2(s3params).promise();
+                  setFinishedList(!response.IsTruncated);
+                  setContKey(response.NextContinuationToken);
+                  let temp = response.Contents?.map(item => item.Key);
+                  let keys = temp.map(async image => {
+                    const param = {
+                      Bucket: process.env.NEXT_PUBLIC_BUCKET_NAME,
+                      Key: image,
+                      Expires: 600,
+                    };
+                    return await s3.getSignedUrlPromise("getObject",param);
+                  });
+                  const newURLs = await Promise.all(keys);
+                  const urlsWithKeys = newURLs.map((url,index) =>{
+                    return {
+                      url: url,
+                      key: temp[index]
+                    }
+                  })
+                  setImageURLs(prevState =>{
+                    if (!prevState) {
+                      return urlsWithKeys;
+                    } else {
+                      return prevState.concat(urlsWithKeys);
+                    }
+                  });
+                }}
+              >
+                Load more...
+              </button>
             }
           </div>
         </div>
@@ -93,13 +125,16 @@ export default function Home({ urls }) {
 async function getBucketList(s3){
 
   var params = {
-    Bucket: process.env.BUCKET_NAME
+    Bucket: process.env.NEXT_PUBLIC_BUCKET_NAME,
+    MaxKeys: 3
   };
   const list = await s3.listObjectsV2(params).promise();
-  return list.Contents.map(item =>{
-    // console.log(item.Key)
-    return item.Key;
-  })
+  return {
+    items: list.Contents.map(item =>{
+      return item.Key;
+    }),
+    continuationKey: list.NextContinuationToken
+  }
 }
 
 export async function getServerSideProps() {
@@ -107,23 +142,29 @@ export async function getServerSideProps() {
 
   const s3 = new S3({
     region: 'ca-central-1',
-    accessKeyId: process.env.ACCESS_KEY,
-    secretAccessKey: process.env.SECRET_KEY,
+    accessKeyId: process.env.NEXT_PUBLIC_ACCESS_KEY,
+    secretAccessKey: process.env.NEXT_PUBLIC_SECRET_KEY,
     signatureVersion: "v4"
   })
 
   let images = await getBucketList(s3);
-
-  const keys = images.map(async image => {
+  const keys = images.items.map(async image => {
     const param = {
-      Bucket: process.env.BUCKET_NAME,
+      Bucket: process.env.NEXT_PUBLIC_BUCKET_NAME,
       Key: image,
       Expires: 600,
     };
     return await s3.getSignedUrlPromise("getObject",param);
   });
   const urls = await Promise.all(keys);
-
+  const urlsWithKeys = urls.map((url,index) =>{
+    return {
+      url: url,
+      key: images.items[index]
+    }
+  })
+  const continuationKey = images.continuationKey;
+  let finishedLoading = images.continuationKey === undefined;
   // Pass data to the page via props
-  return { props: { urls } }
+  return { props: { urlsWithKeys, continuationKey, finishedLoading } }
 }

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import Head from 'next/head'
+import Link from 'next/link'
 import { useState } from 'react'
 import styles from '../styles/Home.module.css';
 import landingPageStyles from '../styles/LandingPage.module.css';
@@ -11,7 +12,7 @@ export default function SubmissionAws(){
   return (
     <div className={styles.container}>
       <Head>
-        <title>Landing Page</title>
+        <title>Submission Page</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -25,11 +26,18 @@ export default function SubmissionAws(){
           <div
             className={landingPageStyles.leftPanel}
           >
-            <h2>Let's get started!</h2>
             <p>
-              This is a secondary page for the photography site.
+              Links
             </p>
-            </div>
+            <ul>
+              <li>
+                <Link href="/">Return to Landing Page</Link>
+              </li>
+              <li>
+                <Link href="/second">List of restaurants and games</Link>
+              </li>
+            </ul>
+          </div>
           <div
             className={landingPageStyles.centerPanel}
           >

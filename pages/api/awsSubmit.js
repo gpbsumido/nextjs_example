@@ -13,14 +13,14 @@ async function postHandler(req,res) {
   try {
     const s3 = new S3({
       region: 'ca-central-1',
-      accessKeyId: process.env.ACCESS_KEY,
-      secretAccessKey: process.env.SECRET_KEY,
+      accessKeyId: process.env.NEXT_PUBLIC_ACCESS_KEY,
+      secretAccessKey: process.env.NEXT_PUBLIC_SECRET_KEY,
       signatureVersion: "v4"
     })
 
     let { name, type } = req.body;
     const fileParams = {
-      Bucket: process.env.BUCKET_NAME,
+      Bucket: process.env.NEXT_PUBLIC_BUCKET_NAME,
       Key: name,
       Expires: 600,
       ContentType: type,

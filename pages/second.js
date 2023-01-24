@@ -1,5 +1,7 @@
 import axios from 'axios';
-import GamePage from '../components/gamepage';import Head from 'next/head'
+import Head from 'next/head'
+import Link from 'next/link'
+import GamePage from '../components/gamepage';
 import styles from '../styles/Home.module.css';
 import landingPageStyles from '../styles/LandingPage.module.css';
 import clientPromise from '../utils/mongo';
@@ -23,11 +25,18 @@ export default function SecondPage({data, movies}){
           <div
             className={landingPageStyles.leftPanel}
           >
-            <h2>Let's get started!</h2>
             <p>
-              This is a secondary page for the photography site.
+              Links
             </p>
-            </div>
+            <ul>
+              <li>
+                <Link href="/">Return to Landing Page</Link>
+              </li>
+              <li>
+                <Link href="/submissionAws">Add new Image</Link>
+              </li>
+            </ul>
+          </div>
           <div
             className={landingPageStyles.centerPanel}
           >
@@ -81,7 +90,8 @@ export default function SecondPage({data, movies}){
         </a>
       </footer>
     </div>
-  )
+  );
+
 }
 
 export async function getServerSideProps() {
@@ -102,11 +112,11 @@ export async function getServerSideProps() {
     const db = client.db("sample_restaurants");
 
     const resp = await db
-        .collection("restaurants")
-        .find({})
-        .sort({ metacritic: -1 })
-        .limit(20)
-        .toArray();
+      .collection("restaurants")
+      .find({})
+      .sort({ metacritic: -1 })
+      .limit(20)
+      .toArray();
 
     movies = JSON.parse(JSON.stringify(resp));
 
