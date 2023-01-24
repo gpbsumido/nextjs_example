@@ -8,6 +8,7 @@ import landingPageStyles from '../styles/LandingPage.module.css';
 export default function SubmissionAws(){
 
   const [image,setImage] = useState();
+  const [imageName,setImageName] = useState();
 
   return (
     <div className={styles.container}>
@@ -46,7 +47,7 @@ export default function SubmissionAws(){
               // method='POST'
             >
               <input type='text' onChange={(e)=>{
-                setImage(e.target.value);
+                setImageName(e.target.value);
               }}/>
               <input
                 // ref={hiddenFileInputDisplay}
@@ -77,14 +78,11 @@ export default function SubmissionAws(){
                   //     popupHandler("File too large!")
                   // }
                   // let file =  new File([Tempfile.slice(0, Tempfile.size, 'application/pdf')], `${fileName}.png`, {type: 'image/png'});
-                  const file = new File([''],Tempfile,{
-                    type: 'image/png'
-                  });
                   let form = new FormData();
                   form.append('myFile', Tempfile);
 
                   const resp = await axios.post('/api/awsSubmit', {
-                    name: Tempfile.name,
+                    name: imageName,
                     type: Tempfile.type
                   });
                   const headers = {
