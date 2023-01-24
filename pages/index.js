@@ -238,7 +238,7 @@ export async function getServerSideProps() {
   };
   const list_promise = await s3.listObjectsV2(params).promise();
   const images = {
-    items: list_promise.Contents.map(item =>{
+    items: list_promise.Contents.filter(item => item.Key.trim() !== '').map(item =>{
       return item.Key;
     }),
     continuationKey: list_promise.NextContinuationToken

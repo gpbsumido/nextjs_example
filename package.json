@@ -9,11 +9,13 @@
     "aws": "^0.0.3-2",
     "aws-sdk": "^2.1300.0",
     "axios": "^1.2.3",
+    "ethers": "^5.7.2",
     "formidable": "^2.1.1",
     "mongodb": "^4.13.0",
     "next": "latest",
     "next-connect": "^0.13.0",
     "react": "^18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "wagmi": "^0.10.15"
   }
 }
