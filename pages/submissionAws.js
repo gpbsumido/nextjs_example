@@ -37,6 +37,9 @@ export default function SubmissionAws(){
               <li>
                 <Link href="/second">List of restaurants and games</Link>
               </li>
+              <li>
+                <Link href="/wallet">Wallet Sign in</Link>
+              </li>
             </ul>
           </div>
           <div
@@ -67,7 +70,7 @@ export default function SubmissionAws(){
               />
               <button
                 onClick={async (e)=>{
-                e.preventDefault();
+                  e.preventDefault();
                   const Tempfile = image;
                   if (!Tempfile) {
                       return
@@ -80,11 +83,15 @@ export default function SubmissionAws(){
                   // let file =  new File([Tempfile.slice(0, Tempfile.size, 'application/pdf')], `${fileName}.png`, {type: 'image/png'});
                   let form = new FormData();
                   form.append('myFile', Tempfile);
-
-                  const resp = await axios.post('/api/awsSubmit', {
+                  const submitParams = {
                     name: (imageName && imageName !== '') ? imageName : Tempfile.name,
                     type: Tempfile.type
-                  });
+                  }
+                  if (!submitParams.name || submitParams.name.trim() === '') {
+                    console.error('Invalid image name.');
+                    return;
+                  }
+                  const resp = await axios.post('/api/awsSubmit',submitParams);
                   const headers = {
                     "Content-type": Tempfile.type,
                     "Access-Control-Allow-Origin": "*",
