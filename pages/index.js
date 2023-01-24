@@ -64,6 +64,7 @@ export default function Home({ urlsWithKeys, continuationKey, finishedLoading })
               <div>
                 <button
                   onClick={ async () => {
+                    if (searchTerm.trim() === '') return;
                     const s3params = {
                       Bucket: process.env.NEXT_PUBLIC_BUCKET_NAME,
                       MaxKeys: 3,
@@ -95,6 +96,7 @@ export default function Home({ urlsWithKeys, continuationKey, finishedLoading })
                 </button>
                 <button
                   onClick={async()=>{
+                    if (searchTerm.trim() === '') return;
                     const s3params = {
                       Bucket: process.env.NEXT_PUBLIC_BUCKET_NAME,
                       MaxKeys: 3,
