@@ -82,7 +82,7 @@ export default function SubmissionAws(){
                   form.append('myFile', Tempfile);
 
                   const resp = await axios.post('/api/awsSubmit', {
-                    name: imageName,
+                    name: (imageName && imageName !== '') ? imageName : Tempfile.name,
                     type: Tempfile.type
                   });
                   const headers = {
