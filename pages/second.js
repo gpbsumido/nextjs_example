@@ -35,6 +35,9 @@ export default function SecondPage({data, movies}){
               <li>
                 <Link href="/submissionAws">Add new Image</Link>
               </li>
+              <li>
+                <Link href="/wallet">Wallet Sign in</Link>
+              </li>
             </ul>
           </div>
           <div

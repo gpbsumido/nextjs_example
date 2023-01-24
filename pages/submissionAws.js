@@ -37,6 +37,9 @@ export default function SubmissionAws(){
               <li>
                 <Link href="/second">List of restaurants and games</Link>
               </li>
+              <li>
+                <Link href="/wallet">Wallet Sign in</Link>
+              </li>
             </ul>
           </div>
           <div
