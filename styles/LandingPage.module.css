@@ -20,6 +20,16 @@
   font-size: 3.6rem;
   padding: 10px;
   border-bottom-style: solid;
+  /* background-color: #73A1B6; */
+}
+
+.footer {
+  /* background-color: #73A1B6; */
+  border-top-color: black;
+}
+
+.fill {
+  flex: 1;
 }
 
 .leftPanel {
@@ -27,6 +37,9 @@
   border-right-style: solid;
   width:300px;
   padding: 10px;
+  display: flex;
+  flex-direction: column;
+  /* background-color: #AFEEEE; */
 }
 
 .centerPanel {
@@ -34,6 +47,12 @@
   display: flex;
   flex-direction: column;
   padding: 10px;
+}
+
+
+.loadMore {
+  width: 200px;
+  margin: 0px auto 10px auto;
 }
 
 @media (max-width: 800px) {

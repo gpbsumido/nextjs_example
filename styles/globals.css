@@ -27,20 +27,15 @@ img {
 
 h1,
 h2,
-p,
-ul {
+p {
   margin: 0;
 }
 
 ul {
   padding: 0;
-  list-style: none;
+  margin: 10px;
 }
 
-button {
-  padding: 0.5rem 1rem;
-  font-weight: bold;
-}
 
 main {
   /* padding: 5rem 0; */
@@ -55,7 +50,7 @@ main {
 footer {
   width: 100%;
   height: 100px;
-  border-top: 1px solid #eaeaea;
+  border-top: 1px solid ;/*#eaeaea;*/
   display: flex;
   justify-content: center;
   align-items: center;
@@ -77,4 +72,8 @@ code {
   font-size: 1.1rem;
   font-family: Menlo, Monaco, Lucida Console, Liberation Mono,
     DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
+}
+
+a:hover {
+  text-decoration: underline;
 }
