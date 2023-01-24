@@ -1,0 +1,26 @@
+.searchBoxDiv {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px auto;
+}
+.searchBoxDiv > p {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.searchBoxDiv > input {
+  width: 300px;
+  margin: 5px auto;
+}
+
+
+.searchBoxDiv > div {
+  display: flex;
+  flex-direction: col;
+  margin: 0px auto 20px auto;
+}
+
+
+.searchBoxDiv > div > button + button {
+  margin-left: 5px;
+}

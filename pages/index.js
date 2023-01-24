@@ -2,15 +2,24 @@ import Head from 'next/head'
 import Link from 'next/link'
 import styles from '../styles/Home.module.css';
 import landingPageStyles from '../styles/LandingPage.module.css';
+import searchBoxStyles from '../styles/SearchBox.module.css';
 import PhotoPost from '../components/photoPost';
 import S3 from 'aws-sdk/clients/s3'
 import { useState } from 'react'
 
 export default function Home({ urlsWithKeys, continuationKey, finishedLoading }) {
 
+  const s3 = new S3({
+    region: 'ca-central-1',
+    accessKeyId: process.env.NEXT_PUBLIC_ACCESS_KEY,
+    secretAccessKey: process.env.NEXT_PUBLIC_SECRET_KEY,
+    signatureVersion: "v4"
+  })
+
   const [imageURLs,setImageURLs] = useState(urlsWithKeys);
   const [contKey,setContKey] = useState(continuationKey);
   const [fiinishedList,setFinishedList] = useState(finishedLoading);
+  const [searchTerm,setSearchTerm] = useState('');
 
   return (
     <div className={styles.container}>
@@ -44,6 +53,79 @@ export default function Home({ urlsWithKeys, continuationKey, finishedLoading })
           <div
             className={landingPageStyles.centerPanel}
           >
+            <div className={searchBoxStyles.searchBoxDiv}>
+              <p>Image Key Search</p>
+              <input
+                onChange={(e)=>{
+                  setSearchTerm(e.target.value)
+                }}
+                type='text'
+              />
+              <div>
+                <button
+                  onClick={ async () => {
+                    const s3params = {
+                      Bucket: process.env.NEXT_PUBLIC_BUCKET_NAME,
+                      MaxKeys: 3,
+                      Prefix: searchTerm
+                    };
+                    const response = await s3.listObjectsV2(s3params).promise();
+                    setFinishedList(!response.IsTruncated);
+                    setContKey(response.NextContinuationToken);
+                    let temp = response.Contents?.map(item => item.Key);
+                    let keys = temp.map(async image => {
+                      const param = {
+                        Bucket: process.env.NEXT_PUBLIC_BUCKET_NAME,
+                        Key: image,
+                        Expires: 600,
+                      };
+                      return await s3.getSignedUrlPromise("getObject",param);
+                    });
+                    const newURLs = await Promise.all(keys);
+                    const urlsWithKeys = newURLs.map((url,index) =>{
+                      return {
+                        url: url,
+                        key: temp[index]
+                      }
+                    })
+                    setImageURLs(urlsWithKeys);
+                  }}
+                >
+                  Search
+                </button>
+                <button
+                  onClick={async()=>{
+                    const s3params = {
+                      Bucket: process.env.NEXT_PUBLIC_BUCKET_NAME,
+                      MaxKeys: 3,
+                    };
+                    const response = await s3.listObjectsV2(s3params).promise();
+                    setFinishedList(!response.IsTruncated);
+                    setContKey(response.NextContinuationToken);
+                    let temp = response.Contents?.map(item => item.Key);
+                    let keys = temp.map(async image => {
+                      const param = {
+                        Bucket: process.env.NEXT_PUBLIC_BUCKET_NAME,
+                        Key: image,
+                        Expires: 600,
+                      };
+                      return await s3.getSignedUrlPromise("getObject",param);
+                    });
+                    const newURLs = await Promise.all(keys);
+                    const urlsWithKeys = newURLs.map((url,index) =>{
+                      return {
+                        url: url,
+                        key: temp[index]
+                      }
+                    })
+                    setImageURLs(urlsWithKeys);
+                  }}
+                >
+                  Clear
+                </button>
+              </div>
+            </div>
+
             {
               imageURLs.map((item,index) =>{
                 return (
@@ -59,18 +141,16 @@ export default function Home({ urlsWithKeys, continuationKey, finishedLoading })
             {
               !fiinishedList &&
               <button
+                className={landingPageStyles.loadMore}
                 onClick={async ()=>{
-                  const s3 = new S3({
-                    region: 'ca-central-1',
-                    accessKeyId: process.env.NEXT_PUBLIC_ACCESS_KEY,
-                    secretAccessKey: process.env.NEXT_PUBLIC_SECRET_KEY,
-                    signatureVersion: "v4"
-                  })
                   const s3params = {
                     Bucket: process.env.NEXT_PUBLIC_BUCKET_NAME,
                     MaxKeys: 3,
                     ContinuationToken: contKey 
                   };
+                  if (searchTerm !== '') {
+                    s3params.Prefix = searchTerm;
+                  }
                   const response = await s3.listObjectsV2(s3params).promise();
                   setFinishedList(!response.IsTruncated);
                   setContKey(response.NextContinuationToken);
@@ -122,23 +202,7 @@ export default function Home({ urlsWithKeys, continuationKey, finishedLoading })
   )
 }
 
-async function getBucketList(s3){
-
-  var params = {
-    Bucket: process.env.NEXT_PUBLIC_BUCKET_NAME,
-    MaxKeys: 3
-  };
-  const list = await s3.listObjectsV2(params).promise();
-  return {
-    items: list.Contents.map(item =>{
-      return item.Key;
-    }),
-    continuationKey: list.NextContinuationToken
-  }
-}
-
 export async function getServerSideProps() {
-
 
   const s3 = new S3({
     region: 'ca-central-1',
@@ -147,7 +211,17 @@ export async function getServerSideProps() {
     signatureVersion: "v4"
   })
 
-  let images = await getBucketList(s3);
+  var params = {
+    Bucket: process.env.NEXT_PUBLIC_BUCKET_NAME,
+    MaxKeys: 3
+  };
+  const list_promise = await s3.listObjectsV2(params).promise();
+  const images = {
+    items: list_promise.Contents.map(item =>{
+      return item.Key;
+    }),
+    continuationKey: list_promise.NextContinuationToken
+  }
   const keys = images.items.map(async image => {
     const param = {
       Bucket: process.env.NEXT_PUBLIC_BUCKET_NAME,

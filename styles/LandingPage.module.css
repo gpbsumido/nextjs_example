@@ -49,6 +49,12 @@
   padding: 10px;
 }
 
+
+.loadMore {
+  width: 200px;
+  margin: 0px auto 10px auto;
+}
+
 @media (max-width: 800px) {
   .leftPanel {
     display: none;
