@@ -6,6 +6,7 @@ import clientPromise from '../../utils/mongo.js'
 import { useState, useEffect } from 'react'
 import axios from 'axios';
 import S3 from 'aws-sdk/clients/s3'
+import { toast } from 'react-toastify';
 
 export default function Ciders({ciders}){
 
@@ -53,7 +54,7 @@ export default function Ciders({ciders}){
             if (found) item.image = found.url;
             return item;
           })
-          .sort((a, b) => a.rating > b.rating ? -1 : 1)
+          .sort((a, b) => Number(a.rating) > Number(b.rating) ? -1 : 1)
       })
     }).catch( e => {
       console.error(e)
@@ -130,7 +131,7 @@ export default function Ciders({ciders}){
               <button
                 onClick={async ()=>{
                   if (!newCider || newCider.trim() === '') {
-                    console.error('Error: no name');
+                    toast.error('Parameter Error: No Cider Name');
                     return;
                   }
                   let mongoParam = {
@@ -145,7 +146,7 @@ export default function Ciders({ciders}){
                   }
                   mongoResp =  await axios.post('/api/ratings/cider',mongoParam);
                   if (!mongoParam.hasImage) {
-                    console.log('success');
+                    toast.success('success');
                     return;
                   }
                   let form = new FormData();
@@ -172,12 +173,12 @@ export default function Ciders({ciders}){
                       headers: headers
                     });
                     if (resultUpload.status === 200) {
-                      console.log('status: success')
+                      toast.success('status: success')
                     } else {
-                      console.log(`status: ${resultUpload.status}`)
+                      toast.warning(`status: ${resultUpload.status}`)
                     }
                   } catch(e){
-                    console.log(e)
+                    toast.error(e)
                   }
                 }}
               >

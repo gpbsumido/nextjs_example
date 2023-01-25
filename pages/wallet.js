@@ -1,6 +1,7 @@
 import { useAccount, useConnect, useDisconnect,useSignMessage } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 import { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
  
 export default function Wallet() {
   const { address, isConnected } = useAccount()
@@ -24,9 +25,9 @@ export default function Wallet() {
             onClick={()=>{
               const message = `Welcome to Paul's Photography Page`;
               signMessageAsync({message}).then((resp)=>{
-                console.log(resp);
+                toast(resp);
               }).catch((e)=>{
-                console.log(e)
+                toast.error(e)
               })
             }}
           >Sign Message</button>
