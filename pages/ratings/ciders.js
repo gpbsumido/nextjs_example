@@ -17,39 +17,48 @@ export default function Ciders({ciders}){
   })
 
   const [image,setImage] = useState();
-  const [newCider,setNewCider] = useState();
-  const [newRating,setNewRating] = useState();
+  const [newCider,setNewCider] = useState('');
+  const [newRating,setNewRating] = useState(0);
 
   const [cidersWithImages,setCidersWithImages] = useState(ciders);
   
   useEffect(() => {
     async function getImages(items){
+      let ids = [];
       const keys = items.map(async item => {
         const param = {
           Bucket: process.env.NEXT_PUBLIC_BUCKET_NAME,
           Key: item._id,
           Expires: 600,
         };
+        ids.push(item._id)
         return await s3.getSignedUrlPromise("getObject",param);
       });
-      return await Promise.all(keys);
+      const promises = await Promise.all(keys);
+      return promises.map((promise,index) => {
+        return {
+          url: promise,
+          key: ids[index]
+        };
+      })
     }
-    const resp = getImages(ciders).then(response =>{
+    const cidersWithoutImages = ciders.filter(item => item.hasImage && !item.image);
+    if (!cidersWithoutImages || cidersWithoutImages.length < 1) return;
+    getImages(cidersWithoutImages).then(response =>{
       setCidersWithImages( prevState => {
-        if (!prevState) return;
-        const cidersWithImage = prevState.map( (cider,index) =>{
-          let newCider = cider;
-          newCider.image = response[index];
-          return newCider;
-        })
-        return cidersWithImage;
+        if (!prevState) return [];
+        return prevState
+          .map( item =>{
+            let found = response.find( response_item => response_item.key === item._id);
+            if (found) item.image = found.url;
+            return item;
+          })
+          .sort((a, b) => a.rating > b.rating ? -1 : 1)
       })
     }).catch( e => {
       console.error(e)
     })
-  }, [ciders]);
-  
-
+  }, [cidersWithImages]);
 
   return (
     <div className={styles.container}>
@@ -90,9 +99,17 @@ export default function Ciders({ciders}){
               <p>Add New Cider Rating</p>
               <br />
               <p>Name</p>
-              <input type='text' onChange={(e)=>setNewCider(e.target.value)}/>
+              <input
+                type='text'
+                onChange={(e)=>setNewCider(e.target.value)}
+                placeholder='Port Moody Ale'
+              />
               <p>Rating</p>
-              <input type='number' onChange={(e)=>setNewRating(e.target.value)}/>
+              <input
+                type='number'
+                onChange={(e)=>setNewRating(e.target.value)}
+                value={newRating}
+              />
               <br />
               <p>Image</p>
               <input
@@ -171,17 +188,19 @@ export default function Ciders({ciders}){
               <br />
             </div>
             <h2>Ciders</h2>
-            <ul
-              className={landingPageStyles.bullets}
-            >
+            <ol>
               {
-                ciders.map(item => {
+                cidersWithImages.map((item) => {
                   return(
                     <li
                       key={item._id}
                     >
-                      { `${item.name}: ${item.rating}` }
-                      <br/>
+                      <p>
+                        { `Name: ${item.name}` }
+                      </p>
+                      <p>
+                        { `Rating: ${item.rating}` }
+                      </p>
                       {
                         item.image && item.hasImage &&
                         <span>
@@ -194,7 +213,7 @@ export default function Ciders({ciders}){
                   );
                 })
               }
-            </ul>
+            </ol>
           </div>
         </div>
       </main>
