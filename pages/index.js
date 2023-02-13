@@ -5,8 +5,9 @@ import landingPageStyles from '../styles/LandingPage.module.css';
 import searchBoxStyles from '../styles/SearchBox.module.css';
 import PhotoPost from '../components/photoPost';
 import S3 from 'aws-sdk/clients/s3'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { toast } from 'react-toastify';
+import RefmintClient from 'refmint-sdk'
 
 export default function Home({ urlsWithKeys, continuationKey, finishedLoading }) {
 
@@ -15,12 +16,29 @@ export default function Home({ urlsWithKeys, continuationKey, finishedLoading })
     accessKeyId: process.env.NEXT_PUBLIC_ACCESS_KEY,
     secretAccessKey: process.env.NEXT_PUBLIC_SECRET_KEY,
     signatureVersion: "v4"
+  });
+
+  var refmint = new RefmintClient({
+    apiKey: '1cR7jRsiydJUJk495PXo5U8CyUc0I2c9eC7mpgwMwVIbjbBsfbP0cG2kAeiTZJpN',
+    baseUrl: 'https://test.refmint.xyz'
   })
 
   const [imageURLs,setImageURLs] = useState(urlsWithKeys);
   const [contKey,setContKey] = useState(continuationKey);
   const [fiinishedList,setFinishedList] = useState(finishedLoading);
   const [searchTerm,setSearchTerm] = useState('');
+
+  useEffect(() => {
+
+    //get referral leaderboard
+    refmint.leaderboard('3verse','publicbeta','referral',10,1,false)
+      .then((resp) => {
+        console.log(resp)
+      }).catch(e => {
+        console.log(e);
+      });
+
+  }, []);
 
   async function removeImage(key){
     const bucketParams = {
