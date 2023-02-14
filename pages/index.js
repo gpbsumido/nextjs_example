@@ -7,7 +7,7 @@ import PhotoPost from '../components/photoPost';
 import S3 from 'aws-sdk/clients/s3'
 import { useState, useEffect } from 'react'
 import { toast } from 'react-toastify';
-import RefmintClient from 'refmint-sdk'
+import Refmint from 'refmint-sdk'
 import REFMINT, { ORDER_BY_SELECTION, BaseURLOptions }  from 'refmint-sdk'
 
 export default function Home({ urlsWithKeys, continuationKey, finishedLoading }) {
@@ -27,10 +27,10 @@ export default function Home({ urlsWithKeys, continuationKey, finishedLoading })
     signatureVersion: "v4"
   });
 
-  var refmint = new RefmintClient({
-    apiKey: '1cR7jRsiydJUJk495PXo5U8CyUc0I2c9eC7mpgwMwVIbjbBsfbP0cG2kAeiTZJpN',
-    baseUrl: 'https://test.refmint.xyz'
-  })
+  // var refmint = new RefmintClient({
+  //   apiKey: '1cR7jRsiydJUJk495PXo5U8CyUc0I2c9eC7mpgwMwVIbjbBsfbP0cG2kAeiTZJpN',
+  //   baseUrl: 'https://test.refmint.xyz'
+  // })
 
   const [imageURLs,setImageURLs] = useState(urlsWithKeys);
   const [contKey,setContKey] = useState(continuationKey);
