@@ -8,8 +8,11 @@ import S3 from 'aws-sdk/clients/s3'
 import { useState, useEffect } from 'react'
 import { toast } from 'react-toastify';
 import RefmintClient from 'refmint-sdk'
+import REFMINT, { ORDER_BY_SELECTION }  from 'refmint-sdk'
 
 export default function Home({ urlsWithKeys, continuationKey, finishedLoading }) {
+
+  console.log(REFMINT)
 
   const s3 = new S3({
     region: 'ca-central-1',
