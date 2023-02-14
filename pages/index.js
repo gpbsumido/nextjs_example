@@ -13,6 +13,12 @@ import REFMINT, { ORDER_BY_SELECTION }  from 'refmint-sdk'
 export default function Home({ urlsWithKeys, continuationKey, finishedLoading }) {
 
   console.log(REFMINT)
+  var refmintClient = new Refmint({
+    apiKey: process.env.REACT_APP_REFMINT_API_KEY,
+    baseUrl: process.env.REACT_APP_REFMINT_API_SERVER === "mainnet" ? BaseURLOptions.MAINNET : BaseURLOptions.TESTNET 
+  });
+  console.log('2',refmintClient)
+
 
   const s3 = new S3({
     region: 'ca-central-1',
