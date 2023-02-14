@@ -8,14 +8,14 @@ import S3 from 'aws-sdk/clients/s3'
 import { useState, useEffect } from 'react'
 import { toast } from 'react-toastify';
 import RefmintClient from 'refmint-sdk'
-import REFMINT, { ORDER_BY_SELECTION }  from 'refmint-sdk'
+import REFMINT, { ORDER_BY_SELECTION, BaseURLOptions }  from 'refmint-sdk'
 
 export default function Home({ urlsWithKeys, continuationKey, finishedLoading }) {
 
   console.log(REFMINT)
   var refmintClient = new Refmint({
     apiKey: process.env.REACT_APP_REFMINT_API_KEY,
-    baseUrl: process.env.REACT_APP_REFMINT_API_SERVER === "mainnet" ? BaseURLOptions.MAINNET : BaseURLOptions.TESTNET 
+    baseUrl: BaseURLOptions.TESTNET//process.env.REACT_APP_REFMINT_API_SERVER === "mainnet" ? BaseURLOptions.MAINNET : BaseURLOptions.TESTNET 
   });
   console.log('2',refmintClient)
 
