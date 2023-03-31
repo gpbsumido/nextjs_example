@@ -1,12 +1,3 @@
-.gamePageDiv {
-  height: 200px;
-  width: full;
-  background-color: gray;
-  border-radius: 10px;
-  margin: 10px 10px;
-  padding: 10px;
-}
-
 .photoPostContainer {
   display: flex;
   flex-direction: column;

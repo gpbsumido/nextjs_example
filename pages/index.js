@@ -7,18 +7,8 @@ import PhotoPost from '../components/photoPost';
 import S3 from 'aws-sdk/clients/s3'
 import { useState, useEffect } from 'react'
 import { toast } from 'react-toastify';
-import Refmint from 'refmint-sdk'
-import REFMINT, { ORDER_BY_SELECTION, BaseURLOptions }  from 'refmint-sdk'
 
 export default function Home({ urlsWithKeys, continuationKey, finishedLoading }) {
-
-  console.log(REFMINT)
-  var refmintClient = new Refmint({
-    apiKey: process.env.REACT_APP_REFMINT_API_KEY,
-    baseUrl: BaseURLOptions.TESTNET//process.env.REACT_APP_REFMINT_API_SERVER === "mainnet" ? BaseURLOptions.MAINNET : BaseURLOptions.TESTNET 
-  });
-  console.log('2',refmintClient)
-
 
   const s3 = new S3({
     region: 'ca-central-1',
@@ -27,27 +17,10 @@ export default function Home({ urlsWithKeys, continuationKey, finishedLoading })
     signatureVersion: "v4"
   });
 
-  // var refmint = new RefmintClient({
-  //   apiKey: '1cR7jRsiydJUJk495PXo5U8CyUc0I2c9eC7mpgwMwVIbjbBsfbP0cG2kAeiTZJpN',
-  //   baseUrl: 'https://test.refmint.xyz'
-  // })
-
   const [imageURLs,setImageURLs] = useState(urlsWithKeys);
   const [contKey,setContKey] = useState(continuationKey);
   const [fiinishedList,setFinishedList] = useState(finishedLoading);
   const [searchTerm,setSearchTerm] = useState('');
-
-  useEffect(() => {
-
-    //get referral leaderboard
-    refmint.leaderboard('3verse','publicbeta','referral',10,1,false)
-      .then((resp) => {
-        console.log(resp)
-      }).catch(e => {
-        console.log(e);
-      });
-
-  }, []);
 
   async function removeImage(key){
     const bucketParams = {
