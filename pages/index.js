@@ -5,7 +5,8 @@ import landingPageStyles from '../styles/LandingPage.module.css';
 import searchBoxStyles from '../styles/SearchBox.module.css';
 import PhotoPost from '../components/photoPost';
 import S3 from 'aws-sdk/clients/s3'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { toast } from 'react-toastify';
 
 export default function Home({ urlsWithKeys, continuationKey, finishedLoading }) {
 
@@ -14,7 +15,7 @@ export default function Home({ urlsWithKeys, continuationKey, finishedLoading })
     accessKeyId: process.env.NEXT_PUBLIC_ACCESS_KEY,
     secretAccessKey: process.env.NEXT_PUBLIC_SECRET_KEY,
     signatureVersion: "v4"
-  })
+  });
 
   const [imageURLs,setImageURLs] = useState(urlsWithKeys);
   const [contKey,setContKey] = useState(continuationKey);
@@ -28,14 +29,14 @@ export default function Home({ urlsWithKeys, continuationKey, finishedLoading })
     };
     try {
       await s3.deleteObject(bucketParams).promise()
-      console.log("Success. Object deleted.");
+      toast.success("Success. Object deleted.");
       setImageURLs(prevState =>{
         if (!prevState) return [];
         const newState =  prevState.filter(item => item.key !== key);
         return newState;
       })
     } catch (err) {
-      console.log("Error", err);
+      toast.error("Error", err);
     }
   }
 
@@ -61,7 +62,7 @@ export default function Home({ urlsWithKeys, continuationKey, finishedLoading })
             </p>
             <ul>
               <li>
-                <Link href="/second">List of restaurants and games</Link>
+                <Link href="/ratings/ciders">Cider Ratings</Link>
               </li>
               <li>
                 <Link href="/submissionAws">Add new Image</Link>

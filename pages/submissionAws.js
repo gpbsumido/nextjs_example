@@ -2,6 +2,7 @@ import axios from 'axios';
 import Head from 'next/head'
 import Link from 'next/link'
 import { useState } from 'react'
+import { toast } from 'react-toastify';
 import styles from '../styles/Home.module.css';
 import landingPageStyles from '../styles/LandingPage.module.css';
 
@@ -35,7 +36,7 @@ export default function SubmissionAws(){
                 <Link href="/">Return to Landing Page</Link>
               </li>
               <li>
-                <Link href="/second">List of restaurants and games</Link>
+                <Link href="/ratings/ciders">Cider Ratings</Link>
               </li>
               <li>
                 <Link href="/wallet">Wallet Sign in</Link>
@@ -103,12 +104,12 @@ export default function SubmissionAws(){
                       headers: headers
                     });
                     if (resultUpload.status === 200) {
-                      console.log('status: success')
+                      toast.success('status: success')
                     } else {
-                      console.log(`status: ${resultUpload.status}`)
+                      toast.warning(`status: ${resultUpload.status}`)
                     }
                   } catch(e){
-                    console.log(e)
+                    toast.error(e)
                   }
               }}>
                 Upload
