@@ -1,3 +1,4 @@
+import React from 'react';
 import '../styles/globals.css';
 import { WagmiConfig, createClient } from 'wagmi'
 import { getDefaultProvider } from 'ethers'

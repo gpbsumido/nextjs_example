@@ -1,9 +1,10 @@
+import React from 'react';
 import Head from 'next/head'
 import Link from 'next/link'
 import styles from '../styles/Home.module.css';
 import landingPageStyles from '../styles/LandingPage.module.css';
 import searchBoxStyles from '../styles/SearchBox.module.css';
-import PhotoPost from '../components/photoPost';
+import PhotoPost from '../components/photoPost.tsx';
 import S3 from 'aws-sdk/clients/s3'
 import { useState, useEffect } from 'react'
 import { toast } from 'react-toastify';

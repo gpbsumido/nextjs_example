@@ -1,7 +1,18 @@
+import React from 'react';
 import GamePageStyles from '../styles/GamePage.module.css';
 import landingPageStyles from '../styles/LandingPage.module.css';
 
-export default function PhotoPost({image,text,date,removeImage}){
+export default function PhotoPost({
+  image,
+  text,
+  date,
+  removeImage
+}:{
+  image: string,
+  text: string,
+  date: string,
+  removeImage: any
+}){
   return (
     <div
       className={GamePageStyles.photoPostContainer}
