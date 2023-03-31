@@ -7,7 +7,8 @@
     "cypress:open": "cypress open",
     "test": "start-server-and-test dev 3000 cypress:open",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "chromatic": "npx chromatic --project-token=3a92a5525fba"
   },
   "dependencies": {
     "@vercel/analytics": "^0.1.8",
@@ -35,9 +36,14 @@
     "@storybook/react": "^7.0.0",
     "@storybook/react-webpack5": "^7.0.0",
     "@storybook/testing-library": "^0.0.14-next.2",
+    "chromatic": "^6.17.2",
     "cypress": "^12.9.0",
     "prop-types": "^15.8.1",
     "start-server-and-test": "^2.0.0",
     "storybook": "^7.0.0"
-  }
+  },
+  "name": "",
+  "version": "",
+  "readme": "ERROR: No README data found!",
+  "_id": "@"
 }

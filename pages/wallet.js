@@ -1,3 +1,4 @@
+import React from "react";
 import { useAccount, useConnect, useDisconnect,useSignMessage } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 import { useState, useEffect } from 'react';
