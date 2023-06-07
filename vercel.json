@@ -4,8 +4,8 @@
   "outputDirectory": ".next/",
   "crons": [
     {
-      "path": "/api/finclusive/checkAllStatus",
-      "schedule": "5 0 7 * *"
+      "path": "/api/crontest",
+      "schedule": "7 0 * * *"
     }
   ]
 }
