@@ -5,11 +5,15 @@
   "crons": [
     {
       "path": "/api/crontest",
-      "schedule": "10 7 * * *"
+      "schedule": "20 7 * * *"
     },
     {
-      "path": "/api/crontest",
-      "schedule": "14 0 * * *"
+      "path": "/api/crontesta",
+      "schedule": "20 0 * * *"
+    },
+    {
+      "path": "/api/crontestb",
+      "schedule": "0 16 * * *"
     }
   ]
 }
