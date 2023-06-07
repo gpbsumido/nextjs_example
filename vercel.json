@@ -6,6 +6,10 @@
     {
       "path": "/api/crontest",
       "schedule": "10 7 * * *"
+    },
+    {
+      "path": "/api/crontest",
+      "schedule": "14 0 * * *"
     }
   ]
 }
