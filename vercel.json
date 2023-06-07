@@ -4,12 +4,8 @@
   "outputDirectory": ".next/",
   "crons": [
     {
-      "path": "/api/crontest",
-      "schedule": "20 7 * * *"
-    },
-    {
       "path": "/api/crontesta",
-      "schedule": "20 0 * * *"
+      "schedule": "22 7 * * *"
     },
     {
       "path": "/api/crontestb",
